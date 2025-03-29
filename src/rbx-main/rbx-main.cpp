@@ -8,13 +8,13 @@
 #include <string>
 
 constexpr auto OT_PRINT = 0;
-constexpr auto OT_INFORMATION = 1;
-constexpr auto OT_WARNING = 2;
+constexpr auto OT_INFO = 1;
+constexpr auto OT_WARN = 2;
 constexpr auto OT_ERROR = 3;
 
 int ASLR(int offset)
 {
-	return (offset - 0x00400000 + (DWORD)GetModuleHandle(NULL));
+	return (offset - 0x00400000 + reinterpret_cast<uintptr_t>(GetModuleHandle(NULL)));
 }
 
 void ConsoleBypass()
@@ -31,14 +31,16 @@ void Main()
 {
 	ConsoleBypass();
 	AllocConsole();
-#pragma warning(disable:6031)
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONIN$", "r", stdin);
-#pragma warning(default:6031)
-	SetConsoleTitleA("RCONSOLE");
+	if (!freopen("CONOUT$", "w", stdout)) {
+		std::cerr << "Failed to redirect stdout!" << std::endl;
+	}
+	if (!freopen("CONIN$", "r", stdin)) {
+		std::cerr << "Failed to redirect stdin!" << std::endl;
+	}
+	SetConsoleTitleA("rconsole");
 	HWND hConsoleW = GetConsoleWindow();
-	::SetWindowPos(hConsoleW, HWND_TOPMOST, 0, 0, 0, 0, SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-	::ShowWindow(hConsoleW, SW_NORMAL);
+	SetWindowPos(hConsoleW, HWND_TOPMOST, 0, 0, 0, 0, SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	ShowWindow(hConsoleW, SW_NORMAL);
 
 	std::string uInput;
 	int selected = OT_PRINT;
@@ -49,8 +51,8 @@ void Main()
 		getline(std::cin, uInput);
 		if (uInput == "exit") { ExitProcess(EXIT_SUCCESS); }
 		if (uInput == "print") { selected = OT_PRINT; }
-		if (uInput == "info") { selected = OT_INFORMATION; }
-		if (uInput == "warn") { selected = OT_WARNING; }
+		if (uInput == "info") { selected = OT_INFO; }
+		if (uInput == "warn") { selected = OT_WARN; }
 		if (uInput == "error") { selected = OT_ERROR; }
 		if (uInput != "print" && uInput != "info" && uInput != "warn" && uInput != "error")
 		{
