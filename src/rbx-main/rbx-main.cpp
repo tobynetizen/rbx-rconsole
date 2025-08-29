@@ -7,10 +7,10 @@
 #include <iostream>
 #include <string>
 
-constexpr auto OT_PRINT = 0;
-constexpr auto OT_INFO = 1;
-constexpr auto OT_WARN = 2;
-constexpr auto OT_ERROR = 3;
+constexpr auto MODE_INFO = 0;
+constexpr auto MODE_INFO = 1;
+constexpr auto MODE_WARN = 2;
+constexpr auto MODE_ERROR = 3;
 
 int ASLR(int offset)
 {
@@ -42,21 +42,21 @@ void Main()
 	SetWindowPos(hConsoleW, HWND_TOPMOST, 0, 0, 0, 0, SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 	ShowWindow(hConsoleW, SW_NORMAL);
 
-	std::string uInput;
-	int selected = OT_PRINT;
+	std::string userInput;
+	int outputMode = MODE_PRINT;
 
 	for (;;)
 	{
 		std::cout << "> ";
-		getline(std::cin, uInput);
-		if (uInput == "exit") { ExitProcess(EXIT_SUCCESS); }
-		if (uInput == "print") { selected = OT_PRINT; }
-		if (uInput == "info") { selected = OT_INFO; }
-		if (uInput == "warn") { selected = OT_WARN; }
-		if (uInput == "error") { selected = OT_ERROR; }
-		if (uInput != "print" && uInput != "info" && uInput != "warn" && uInput != "error")
+		getline(std::cin, userInput);
+		if (userInput == "exit") { ExitProcess(EXIT_SUCCESS); }
+		if (userInput == "print") { outputMode = MODE_PRINT; }
+		if (userInput == "info") { outputMode = MODE_INFO; }
+		if (userInput == "warn") { outputMode = MODE_WARN; }
+		if (userInput == "error") { outputMode = MODE_ERROR; }
+		if (userInput != "print" && userInput != "info" && userInput != "warn" && userInput != "error")
 		{
-			SingletonPrint(selected, (int)uInput.c_str(), 6);
+			SingletonPrint(outputMode, (int)userInput.c_str(), 6);
 		}
 	}
 }
