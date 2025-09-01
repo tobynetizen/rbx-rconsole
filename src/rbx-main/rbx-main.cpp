@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-constexpr auto MODE_INFO = 0;
+constexpr auto MODE_PRINT = 0;
 constexpr auto MODE_INFO = 1;
 constexpr auto MODE_WARN = 2;
 constexpr auto MODE_ERROR = 3;

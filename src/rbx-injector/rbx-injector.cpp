@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     std::string fullPath = std::string(cwDir) + "\\rbx-main.dll";
     dllPath = (PCHAR)fullPath.c_str();
     DWORD dwMainProcessId = FetchProcessId(rpbProcess);
-    Inject(dwMainProcessId);
+    Inject();
     std::this_thread::sleep_for(7s);
     ExitProcess(EXIT_SUCCESS);
 }
